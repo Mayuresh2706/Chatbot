@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>SMARTeIS Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <h2>Welcome to SMARTeIS, {{ session['user'] }}!</h2>
+    <p>Click the button at the bottom right to chat.</p>
+
+    <div class="chat-button" onclick="toggleChat()"> 🤖 </div>
+
+    <div id="chat-popup" class="chat-popup">
+ 
+        <div class="chat-header">
+            SMARTeIS Chatbot
+            <span onclick="toggleChat()" style="cursor:pointer;" id = "cross">✖️</span>
+            </div>
+        <div id="chat-box"> 
+        🤖 Hey, I am the SMARTeIS bot. How can I assist you today?
+        <br>
+        <br>
+
+        Frequently Asked Questions
+        <button font = 'Segoe UI' class = 'prompt' onclick = sendPrompt(this)> What is SMARTeIS? </button>
+        <button font = 'Segoe UI'     class = 'prompt' onclick = sendPrompt(this)> How to submit an invoice in SMARTeIS? </button>
+        </div>
+        
+        <div id = 'input-area'>
+        <input type="text" id="user-input" placeholder="Ask something..." onkeydown= checkEnter(event)>
+        <button type = "submit" onclick = 'sendMessage()'> Submit </button>
+        </div>
+    </div>
+  
+
+    <button class = 'logout' onclick="logout()"> Logout </button>
+
+<script>
+    function checkEnter(element){
+        if (element.key === "Enter"){
+            sendMessage();
+        }
+    }
+    function sendPrompt(element){
+        const question = document.getElementById('user-input');
+        question.value = element.innerText;
+        sendMessage();
+
+    }
+    function toggleChat() {
+        const popup = document.getElementById('chat-popup');
+        popup.style.display = popup.style.display === 'block' ? 'none' : 'block'
+        if (popup.style.display === 'none'){
+            location.reload()
+        };
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('user-input');
+        const chatBox = document.getElementById('chat-box');
+        chatBox.innerHTML = '';
+
+        const msg = input.value.trim();
+        if (!msg){
+        alert('Please enter a question');
+        return;}
+
+        const userMsg = document.createElement('div');
+        userMsg.textContent = msg;
+        userMsg.className = 'chat-bubble user';
+        chatBox.appendChild(userMsg);
+        input.value = ''
+
+        const loader = document.createElement('div');
+        loader.className = 'thinking-indicator';
+        loader.id = 'thinking-indicator';
+        loader.innerHTML = `
+        <div id = 'bot'>🤖 Bot is thinking </div>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        `;
+        chatBox.append(loader)
+        
+        loader.style.display = 'flex';
+
+        const res = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ input: msg })
+        });
+
+        loader.style.display = 'none';
+        const data = await res.json();
+
+        const botMsg = document.createElement('div');
+        botMsg.id = 'bot-answer'
+        botMsg.className = 'chat-bubble.bot'; 
+        botMsg.innerHTML = `<div id = 'bot'>🤖</div> `+ data.answer;
+        chatBox.appendChild(botMsg);
+
+
+    
+    }
+async function logout(){
+        const log = await fetch('/logout', {
+            method : 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        if (log.ok){
+            window.location.href = '/';
+            
+        }};
+
+</script>
+</body>
+</html>
