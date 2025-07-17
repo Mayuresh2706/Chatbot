@@ -10,8 +10,7 @@ import json
 users = {'admin': 'admin123'}
 
 app = Flask(__name__)
-app.secret_key  = 'new_session_2'
-
+app.secret_key  = 'new_session'
 
 conn = mysql.connector.connect(
     host='localhost',
@@ -79,17 +78,15 @@ def chat():
                         "prompt": f"""
 You are SMARTeIS Assistant, a helpful chatbot trained on e-Invoicing.
 
-Respond conversationally. If the user is being polite or just chatting, greet them warmly and redirect gently to e-Invoicing. 
+Keep your answer short and concise, and avoid unnecessary details.
+
 If they ask invoice-related questions, answer accurately using the FAQ.
 
 Question: {input_text}
 
-Chat history:
-{history}
+Chat history: {history}
 
-FAQs:
-{faq_text}
-""" })
+FAQs: {faq_text} """ })
         
         if response.status_code == 200:
             ollama = response.json()
@@ -97,12 +94,12 @@ FAQs:
             cursor.execute("INSERT INTO history (user, question, answer) VALUES (%s, %s, %s)",
             (session['user'], input_text, ollama))
             conn.commit()
-            return jsonify({'answer': ollama})
+            return jsonify({'answer': ollama,'recommended questions': [Questions[i] for i in I[0]][1:4]})
     
     cursor.execute("INSERT INTO history (user, question, answer) VALUES (%s, %s, %s)",
                    (session['user'], input_text, Answers[best_answer_index]))
     conn.commit()
-    return jsonify({'answer': Answers[best_answer_index]})
+    return jsonify({'answer': Answers[best_answer_index],'recommended questions': [Questions[i] for i in I[0]][1:4]})
 
 
 if __name__ == '__main__':

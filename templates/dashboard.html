@@ -3,38 +3,35 @@
 
 <head>
     <title>SMARTeIS Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_final.css') }}">
 </head>
 
 <body>
     <h2>Welcome to SMARTeIS, {{ session['user'] }}!</h2>
     <p>Click the button at the bottom right to chat.</p>
-
     <div class="chat-button" onclick="toggleChat()"> 🤖 </div>
 
-    <div id="chat-popup" class="chat-popup">
- 
-        <div class="chat-header">
-            SMARTeIS Chatbot
-            <span onclick="toggleChat()" style="cursor:pointer;" id = "cross">✖️</span>
-            </div>
-        <div id="chat-box"> 
-        🤖 Hey, I am the SMARTeIS bot. How can I assist you today?
-        <br>
-        <br>
+ <div id="chat-popup" class="chat-popup">
+    <div class="chat-header">
+        SMARTeIS Chatbot
+        <span onclick="resetChat()" style="cursor:pointer;" id="cross">✖️</span>
+    </div>
 
-        Frequently Asked Questions
-        <button font = 'Segoe UI' class = 'prompt' onclick = sendPrompt(this)> What is SMARTeIS? </button>
-        <button font = 'Segoe UI'     class = 'prompt' onclick = sendPrompt(this)> How to submit an invoice in SMARTeIS? </button>
+    <div class="chat-body">
+        <div id="chat-box" class="chat-box">
+            🤖 Hey, I am the SMARTeIS bot. How can I assist you today?
+            <br><br>
+            Frequently Asked Questions
+            <button class='prompt' onclick="sendPrompt(this)">What is SMARTeIS?</button>
+            <button class='prompt' onclick="sendPrompt(this)">How to submit an invoice in SMARTeIS?</button>
         </div>
-        
-        <div id = 'input-area'>
-        <input type="text" id="user-input" placeholder="Ask something..." onkeydown= checkEnter(event)>
-        <button type = "submit" onclick = 'sendMessage()'> Submit </button>
+
+        <div id="input-area" class="input-area">
+            <input type="text" id="user-input" placeholder="Ask something..." onkeydown="checkEnter(event)">
+            <button type="submit" onclick="sendMessage()">Submit</button>
         </div>
     </div>
-  
-
+</div>
     <button class = 'logout' onclick="logout()"> Logout </button>
 
 <script>
@@ -50,11 +47,13 @@
 
     }
     function toggleChat() {
-        const popup = document.getElementById('chat-popup');
-        popup.style.display = popup.style.display === 'block' ? 'none' : 'block'
-        if (popup.style.display === 'none'){
-            location.reload()
-        };
+    const popup = document.getElementById('chat-popup');
+    popup.classList.toggle('active');
+
+}
+
+    function resetChat() {
+        location.reload();
     }
 
     async function sendMessage() {
@@ -97,14 +96,41 @@
 
         const botMsg = document.createElement('div');
         botMsg.id = 'bot-answer'
-        botMsg.className = 'chat-bubble.bot'; 
+        botMsg.className = 'chat-bubble bot'; 
         botMsg.innerHTML = `<div id = 'bot'>🤖</div> `+ data.answer;
         chatBox.appendChild(botMsg);
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback';
+        feedback.innerHTML = `
+            <p><strong>Was this answer helpful?</strong></p>
+            <button class="feedback-button" onclick="sendFeedback('yes')">👍</button>
+            <button class="feedback-button" onclick="sendFeedback('no')">👎</button>
+        `;
+        chatBox.appendChild(feedback);
+
+
+        const recommendedQuestions = document.createElement('div');
+        recommendedQuestions.id = 'recommended-questions';
+        recommendedQuestions.style.marginTop = '10px';
+        recommendedQuestions.innerHTML = '<strong>You may be interested in:</strong><br>';
+        data['recommended questions'].forEach(question => {
+            const questionButton = document.createElement('button');
+            questionButton.className = 'prompt';
+            questionButton.textContent = question;
+            questionButton.onclick = () => {
+                input.value = question;
+                sendMessage();
+            };
+            recommendedQuestions.appendChild(questionButton);
+        });
+        chatBox.appendChild(recommendedQuestions);
 
 
     
     }
-async function logout(){
+
+
+    async function logout(){
         const log = await fetch('/logout', {
             method : 'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -113,7 +139,14 @@ async function logout(){
             window.location.href = '/';
             
         }};
-
+    
+    function sendFeedback(feedback) {
+        if (feedback === 'yes') {
+            alert('Thank you for your feedback!');
+        } else {
+            alert('We are sorry to hear that. Please email us your query at query@smart-einvoicing.com');
+        }
+    }     
 </script>
 </body>
 </html>
