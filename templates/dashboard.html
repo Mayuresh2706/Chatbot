@@ -127,6 +127,8 @@
     seeSimilar.className = 'prompt';
     seeSimilar.textContent = 'Other similar questions';
 seeSimilar.onclick = () => {
+    chatBox.innerHTML = '';
+    chatBox.append("Here are some similar questions:");
     data['recommended questions'].forEach(question => {
     const questionButton = document.createElement('button');
     questionButton.className = 'prompt';
@@ -150,7 +152,7 @@ contact_us.id = 'contact-us';
 contact_us.textContent = 'Contact us';
 contact_us.onclick = () => {
     chatBox.innerHTML = '';
-    chatBox.append("For any queries, please email us at query@smarte-invoicing.com")}
+    chatBox.append("For any queries, please email us your query at query@smarte-invoicing.com and we will assist you shortly. 🙁");}
 
 nextSteps.appendChild(askAnother);
 nextSteps.appendChild(seeSimilar);
@@ -185,9 +187,11 @@ chatBox.appendChild(nextSteps);
 
         const chatBox = document.getElementById('chat-box'); 
         if (type === 'yes') {
+            chatBox.innerHTML = '';
             chatBox.append("Thank you for your feedback! 😊")
         } else {
-            chatBox.append("We’re sorry to hear that. Please email your query to query@smart-einvoicing.com 🙁");
+            chatBox.innerHTML = '';
+            chatBox.append("We’re sorry to hear that. Please email us your query at query@smart-einvoicing.com and we will assist you shortly. 🙁");
         }}
         chatBox.appendChild(feedbackMsg);
 </script>
