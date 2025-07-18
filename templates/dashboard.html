@@ -101,35 +101,68 @@
         chatBox.appendChild(botMsg);
         const feedback = document.createElement('div');
         feedback.className = 'feedback';
-        feedback.innerHTML = `
+        feedback.innerHTML = 
+            `<div id = feedback>
             <p><strong>Was this answer helpful?</strong></p>
             <button class="feedback-button" onclick="sendFeedback('yes')">👍</button>
             <button class="feedback-button" onclick="sendFeedback('no')">👎</button>
-        `;
+            </div>`;
         chatBox.appendChild(feedback);
 
 
-        const recommendedQuestions = document.createElement('div');
-        recommendedQuestions.id = 'recommended-questions';
-        recommendedQuestions.style.marginTop = '10px';
-        recommendedQuestions.innerHTML = '<strong>You may be interested in:</strong><br>';
-        data['recommended questions'].forEach(question => {
-            const questionButton = document.createElement('button');
-            questionButton.className = 'prompt';
-            questionButton.textContent = question;
-            questionButton.onclick = () => {
-                input.value = question;
-                sendMessage();
-            };
-            recommendedQuestions.appendChild(questionButton);
-        });
-        chatBox.appendChild(recommendedQuestions);
+    const nextSteps = document.createElement('div');
+    nextSteps.id = 'next-steps';
+    nextSteps.style.marginTop = '10px';
+    nextSteps.innerHTML = '<strong>What can I help you with next?</strong><br>';
 
+    const askAnother = document.createElement('button');
+    askAnother.className = 'prompt';
+    askAnother.textContent = 'Ask another question';
+    askAnother.onclick = () => {
+    input.value = '';
+    input.focus();
+};
 
+    const seeSimilar = document.createElement('button');
+    seeSimilar.className = 'prompt';
+    seeSimilar.textContent = 'Other similar questions';
+seeSimilar.onclick = () => {
+    data['recommended questions'].forEach(question => {
+    const questionButton = document.createElement('button');
+    questionButton.className = 'prompt';
+    questionButton.textContent = question;
+    chatBox.appendChild(questionButton)
+    seeSimilar.textContent = 'Other similar questions';
+    questionButton.onclick = () => {
+              input.value = questionButton.textContent;
+        sendMessage();
+    };
     
+});
+    
+};
+
+    chatBox.append(seeSimilar);
+
+
+const contact_us = document.createElement('button');
+contact_us.id = 'contact-us';
+contact_us.textContent = 'Contact us';
+contact_us.onclick = () => {
+    chatBox.innerHTML = '';
+    chatBox.append("For any queries, please email us at query@smarte-invoicing.com")}
+
+nextSteps.appendChild(askAnother);
+nextSteps.appendChild(seeSimilar);
+nextSteps.appendChild(contact_us);
+chatBox.appendChild(nextSteps);
     }
 
 
+    
+    
+
+    
     async function logout(){
         const log = await fetch('/logout', {
             method : 'GET',
@@ -139,14 +172,24 @@
             window.location.href = '/';
             
         }};
+
     
-    function sendFeedback(feedback) {
-        if (feedback === 'yes') {
-            alert('Thank you for your feedback!');
+    function sendFeedback(type) {
+        let feedbackGiven = false;
+        if (feedbackGiven) return; 
+        feedbackGiven = true;
+
+
+        const feedbackDiv = document.getElementById('feedback');
+        if (feedbackDiv) feedbackDiv.style.display = 'none';
+
+        const chatBox = document.getElementById('chat-box'); 
+        if (type === 'yes') {
+            chatBox.append("Thank you for your feedback! 😊")
         } else {
-            alert('We are sorry to hear that. Please email us your query at query@smart-einvoicing.com');
-        }
-    }     
+            chatBox.append("We’re sorry to hear that. Please email your query to query@smart-einvoicing.com 🙁");
+        }}
+        chatBox.appendChild(feedbackMsg);
 </script>
 </body>
 </html>
