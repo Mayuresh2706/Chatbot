@@ -7,8 +7,10 @@
 </head>
 
 <body>
+    <div id = "dashboard">
     <h2>Welcome to SMARTeIS, {{ session['user'] }}!</h2>
     <p>Click the button at the bottom right to chat.</p>
+    </div>
     <div class="chat-button" onclick="toggleChat()"> 🤖 </div>
 
  <div id="chat-popup" class="chat-popup">
@@ -149,10 +151,11 @@ seeSimilar.onclick = () => {
 
 const contact_us = document.createElement('button');
 contact_us.id = 'contact-us';
+contact_us.className = 'prompt';
 contact_us.textContent = 'Contact us';
 contact_us.onclick = () => {
     chatBox.innerHTML = '';
-    chatBox.append("For any queries, please email us your query at query@smarte-invoicing.com and we will assist you shortly. 🙁");}
+    chatBox.append("For any queries, please email us your question at query@smarte-invoicing.com and we will assist you shortly. ");}
 
 nextSteps.appendChild(askAnother);
 nextSteps.appendChild(seeSimilar);
@@ -191,7 +194,7 @@ chatBox.appendChild(nextSteps);
             chatBox.append("Thank you for your feedback! 😊")
         } else {
             chatBox.innerHTML = '';
-            chatBox.append("We’re sorry to hear that. Please email us your query at query@smart-einvoicing.com and we will assist you shortly. 🙁");
+            chatBox.append("We’re sorry to hear that. Please email us your query at query@smart-einvoicing.com and we will assist you shortly. ");
         }}
         chatBox.appendChild(feedbackMsg);
 </script>
