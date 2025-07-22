@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Calibri, 'Trebuchet MS', sans-serif, sans-serif;
     margin: 0;
     padding: 0;
     position: relative;
@@ -24,6 +24,7 @@ body {
     z-index: 1000;
 }
 
+
 .chat-popup {
     display: none;
     position: fixed;
@@ -44,21 +45,22 @@ body {
     display: flex;
 }
 .chat-header {
-    background-color: #007bff;
+    background: linear-gradient(to right, #1d976c, #93f9b9);
     color: white;
-    padding: 12px;
+    padding: 12px 16px;
     font-weight: bold;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 8px;
 }
 
 .chat-body {
     flex-grow: 1;
+    padding: 12px;
     display: flex;
     flex-direction: column;
-    padding: 12px;
     overflow-y: auto;
+    background-color: #fff;
 }
 
 .chat-box {
@@ -66,6 +68,8 @@ body {
     margin-bottom: 10px;
     overflow-y: auto;
     max-height: 250px;
+    display : flex;
+    flex-direction: column;
 }
 
 .chat-bubble {
@@ -78,19 +82,34 @@ body {
 }
 
 .chat-bubble.user {
-    background-color: #dcf8c6;
-    align-self: flex-end;
+    max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    margin: 8px;
+    line-height: 1.5;
+    background-color: #d1e7dd;
+  align-self: flex-start;
+  border-top-right-radius: 4px;
 }
 
+
 .chat-bubble.bot {
-    background-color: #f1f0f0;
-    align-self: flex-start;
+    max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    margin: 8px;
+    line-height: 1.5;
+    background-color: #f2f3f5;
+    align-self: flex-end;
+    border-top-left-radius: 4px;
 }
 
 .input-area {
-    display: flex;
-    border-top: 1px solid #ccc;
+     display: flex;
+    align-items: center;
     padding: 8px;
+    border-top: 1px solid #ccc;
+    background-color: #f9f9f9;
 }
 
 .input-area input {
@@ -102,16 +121,9 @@ body {
 }
 
 .input-area button {
-    padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
     border: none;
-    border-radius: 6px;
+    background: none;
     cursor: pointer;
-}
-
-#recommended-questions {
-    margin-top: 12px;
 }
 
 button.prompt {
@@ -203,7 +215,7 @@ button.prompt {
 }
 
 .feedback-button{
-     font-size: 22px;
+    font-size: 22px;
     padding: 8px 12px;
     margin: 4px;
     background-color: #fff;

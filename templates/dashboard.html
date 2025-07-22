@@ -15,17 +15,13 @@
 
  <div id="chat-popup" class="chat-popup">
     <div class="chat-header">
-        SMARTeIS Chatbot
+        🤖 SMARTeISBot AI
         <span onclick="resetChat()" style="cursor:pointer;" id="cross">✖️</span>
     </div>
 
     <div class="chat-body">
         <div id="chat-box" class="chat-box">
             🤖 Hey, I am the SMARTeIS bot. How can I assist you today?
-            <br><br>
-            Frequently Asked Questions
-            <button class='prompt' onclick="sendPrompt(this)">What is SMARTeIS?</button>
-            <button class='prompt' onclick="sendPrompt(this)">How to submit an invoice in SMARTeIS?</button>
         </div>
 
         <div id="input-area" class="input-area">
@@ -42,12 +38,7 @@
             sendMessage();
         }
     }
-    function sendPrompt(element){
-        const question = document.getElementById('user-input');
-        question.value = element.innerText;
-        sendMessage();
 
-    }
     function toggleChat() {
     const popup = document.getElementById('chat-popup');
     popup.classList.toggle('active');
@@ -61,7 +52,7 @@
     async function sendMessage() {
         const input = document.getElementById('user-input');
         const chatBox = document.getElementById('chat-box');
-        chatBox.innerHTML = '';
+        
 
         const msg = input.value.trim();
         if (!msg){
@@ -121,7 +112,6 @@
     askAnother.className = 'prompt';
     askAnother.textContent = 'Ask another question';
     askAnother.onclick = () => {
-    chatBox.innerHTML = '';
     input.value = '';
     input.focus();
 };
@@ -164,11 +154,6 @@ nextSteps.appendChild(contact_us);
 chatBox.appendChild(nextSteps);
     }
 
-
-    
-    
-
-    
     async function logout(){
         const log = await fetch('/logout', {
             method : 'GET',
@@ -191,13 +176,10 @@ chatBox.appendChild(nextSteps);
 
         const chatBox = document.getElementById('chat-box'); 
         if (type === 'yes') {
-            chatBox.innerHTML = '';
             chatBox.append("Thank you for your feedback! 😊")
         } else {
-            chatBox.innerHTML = '';
             chatBox.append("We’re sorry to hear that. Please email us your query at query@smart-einvoicing.com and we will assist you shortly. ");
         }}
-        chatBox.appendChild(feedbackMsg);
 </script>
 </body>
 </html>
