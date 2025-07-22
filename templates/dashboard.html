@@ -121,6 +121,7 @@
     askAnother.className = 'prompt';
     askAnother.textContent = 'Ask another question';
     askAnother.onclick = () => {
+    chatBox.innerHTML = '';
     input.value = '';
     input.focus();
 };
