@@ -16,9 +16,11 @@
  <div id="chat-popup" class="chat-popup">
     <div class="chat-header">
     🤖 SMARTeISBot AI
-    <span onclick="minimizeChat()" style="cursor:pointer; margin-right: 10px;" id = 'minimize'>➖</span>
-    <span onclick="resetChat()" style="cursor:pointer;" id="cross">✖️</span>
-    </div>
+    <span class="chat-header-buttons">
+        <span onclick="minimizeChat()" id="minimize" style="cursor:pointer;">➖</span>
+        <span onclick="resetChat()" id="cross" style="cursor:pointer;">✖️</span>
+    </span>
+</div>
 
 
     <div class="chat-body">
@@ -58,7 +60,7 @@
     const minimizeBtn = document.getElementById('minimize');
 
     const isHidden = chatBody.classList.toggle('hidden');
-    minimizeBtn.textContent = isHidden ? '➕' : '➖';
+    minimizeBtn.textContent = isHidden ? '🗖' : '➖';
 }
 
 
@@ -104,7 +106,7 @@
         const botMsg = document.createElement('div');
         botMsg.id = 'bot-answer'
         botMsg.className = 'chat-bubble bot'; 
-        botMsg.innerHTML = `<div id='bot'>🤖</div><span class="timestamp">${time}</span><br>` + data.answer;
+        botMsg.innerHTML = `<div id='bot'>🤖</div><span class="timestamp">${time} </span><br>` + data.answer;
         chatBox.appendChild(botMsg);
         document.querySelectorAll('.feedback, #next-steps').forEach(el => el.remove());
         const feedback = document.createElement('div');
