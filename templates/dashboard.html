@@ -15,13 +15,17 @@
 
  <div id="chat-popup" class="chat-popup">
     <div class="chat-header">
-        🤖 SMARTeISBot AI
-        <span onclick="resetChat()" style="cursor:pointer;" id="cross">✖️</span>
+    🤖 SMARTeISBot AI
+    <span onclick="minimizeChat()" style="cursor:pointer; margin-right: 10px;" id = 'minimize'>➖</span>
+    <span onclick="resetChat()" style="cursor:pointer;" id="cross">✖️</span>
     </div>
+
 
     <div class="chat-body">
         <div id="chat-box" class="chat-box">
+            <div id = 'intro'>
             🤖 Hey, I am the SMARTeIS bot. How can I assist you today?
+            </div>
         </div>
 
         <div id="input-area" class="input-area">
@@ -49,10 +53,19 @@
         location.reload();
     }
 
+    function minimizeChat() {
+    const chatBody = document.querySelector('.chat-body');
+    const minimizeBtn = document.getElementById('minimize');
+
+    const isHidden = chatBody.classList.toggle('hidden');
+    minimizeBtn.textContent = isHidden ? '➕' : '➖';
+}
+
+
     async function sendMessage() {
         const input = document.getElementById('user-input');
         const chatBox = document.getElementById('chat-box');
-        
+        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
         const msg = input.value.trim();
         if (!msg){
@@ -62,6 +75,7 @@
         const userMsg = document.createElement('div');
         userMsg.textContent = msg;
         userMsg.className = 'chat-bubble user';
+        userMsg.innerHTML = `<span class="timestamp">${time}</span><br>` + msg;
         chatBox.appendChild(userMsg);
         input.value = ''
 
@@ -90,8 +104,9 @@
         const botMsg = document.createElement('div');
         botMsg.id = 'bot-answer'
         botMsg.className = 'chat-bubble bot'; 
-        botMsg.innerHTML = `<div id = 'bot'>🤖</div> `+ data.answer;
+        botMsg.innerHTML = `<div id='bot'>🤖</div><span class="timestamp">${time}</span><br>` + data.answer;
         chatBox.appendChild(botMsg);
+        document.querySelectorAll('.feedback, #next-steps').forEach(el => el.remove());
         const feedback = document.createElement('div');
         feedback.className = 'feedback';
         feedback.innerHTML = 
@@ -152,6 +167,8 @@ nextSteps.appendChild(askAnother);
 nextSteps.appendChild(seeSimilar);
 nextSteps.appendChild(contact_us);
 chatBox.appendChild(nextSteps);
+chatBox.scrollTop = chatBox.scrollHeight;
+
     }
 
     async function logout(){

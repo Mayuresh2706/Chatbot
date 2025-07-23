@@ -101,19 +101,6 @@ FAQs: {faq_text} """ })
     conn.commit()
     return jsonify({'answer': Answers[best_answer_index],'recommended questions': [Questions[i] for i in I[0]][1:4]})
 
-@app.route('/feedback', methods=['POST'])
-def feedback():
-    data = request.json
-    question = data.get('question')
-    answer = data.get('answer')
-    feedback = data.get('feedback')
-    user = session.get('user', None)
-
-    if user in session:
-        cursor.execute("INSERT INTO feedback (user, question, answer, feedback) VALUES (%s, %s, %s, %s)",
-                       (session['user'], question, answer, feedback))
-        conn.commit()
-        return jsonify({'status': 'success', 'message': 'Feedback submitted successfully'})
     
 if __name__ == '__main__':
     app.run(port = 5000,debug=True)

@@ -15,7 +15,7 @@ body {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #007bff;
+    background-color: linear-gradient(to right, #1d976c, #93f9b9);
     color: white;
     padding: 12px 16px;
     border-radius: 50%;
@@ -24,7 +24,18 @@ body {
     z-index: 1000;
 }
 
+#minimize {
+    align-items: right;
+}   
 
+#cross {
+    align-items: right;
+}
+
+
+.chat-body.hidden {
+    display: none;
+}
 .chat-popup {
     display: none;
     position: fixed;
@@ -39,6 +50,11 @@ body {
     z-index: 1001;
     overflow: hidden;
     flex-direction: column;
+}
+
+.timestamp {
+    font-size: 0.7em;
+    color: gray;
 }
 
 .chat-popup.active {
@@ -61,17 +77,31 @@ body {
     flex-direction: column;
     overflow-y: auto;
     background-color: #fff;
+    scroll-behavior: smooth;
 }
 
 .chat-box {
+    
     flex-grow: 1;
     margin-bottom: 10px;
     overflow-y: auto;
     max-height: 250px;
     display : flex;
     flex-direction: column;
+    scroll-behavior: smooth;
+
 }
 
+#intro{
+     max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    margin: 8px;
+    line-height: 1.5;
+    background-color: #f2f3f5;
+    align-self: flex-end;
+    border-top-left-radius: 4px;
+}
 .chat-bubble {
     background-color: #eee;
     padding: 10px;
