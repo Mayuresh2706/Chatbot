@@ -59,43 +59,51 @@ index.add(np.array(Encoder))
 def chat():
     input_text = request.json.get('input', '')
     query_vector = Model.encode(input_text, normalize_embeddings=True)
-    D, I = index.search(np.array([query_vector]), k=10)
+    D, I = index.search(np.array([query_vector]), k=3)
 
     similarity = D[0][0]
     best_answer_index = I[0][0]
 
-    cursor.execute("SELECT question, answer FROM history WHERE user = %s ORDER BY created_at DESC LIMIT 5", (session['user'],))
+    cursor.execute("SELECT question, answer FROM history WHERE user = %s ORDER BY created_at DESC LIMIT 1", (session['user'],))
     chat_history_rows = cursor.fetchall()
         
     if similarity< 0.90:
         history = "\n".join([f'"User": "{row["question"]}"\n"Bot": "{row["answer"]}"' for row in chat_history_rows])
         faq_text = "\n".join([f'"Q": "{Questions[i]}"\n"A": "{Answers[i]}"' for i in I[0]])
-        response = requests.post(
-                    'http://localhost:11434/api/generate',
-                    json={
-                        "model": "mistral",
-                        "stream": False,
-                        "prompt": f"""
-You are SMARTeIS Assistant, a helpful chatbot trained on e-Invoicing.
-
-Keep your answer short and concise, and avoid unnecessary details.
-
-
-You may use the following as context to answer the question, where necessary:
-Question: {input_text}
-
-Chat history: {history}
-
-FAQs: {faq_text} """ })
         
+        response = requests.post('http://localhost:11434/api/generate/',
+                    json={
+                        "model": "phi",
+                        "stream": False,
+                        "num_predict": 50,
+                        "prompt" : f'''
+You are a helpful and concise support bot trained to answer e-Invoicing-related questions based on FAQs.
+
+Answer the question below clearly and concisely in 1–2 sentences. Act like its a conversation not a FAQ.
+
+User Question:
+{input_text}
+
+Recent Chat History (optional):
+{history}
+
+Relevant FAQs:
+{faq_text}
+
+Only output your answer — do not repeat the question or include 'User' or 'Bot' tags.
+
+'''}
+)
         if response.status_code == 200:
-            ollama = response.json()
-            ollama = ollama['response']
-            cursor.execute("INSERT INTO history (user, question, answer) VALUES (%s, %s, %s)",
-            (session['user'], input_text, ollama))
-            conn.commit()
-            return jsonify({'answer': ollama,'recommended questions': [Questions[i] for i in I[0]][1:4]})
-    
+                ollama = response.json()
+                ollama = ollama['response']
+                cursor.execute("INSERT INTO history (user, question, answer) VALUES (%s, %s, %s)",
+                (session['user'], input_text, ollama))
+                conn.commit()
+                return jsonify({'answer': ollama,'recommended questions': [Questions[i] for i in I[0]][1:4]})
+        else:
+            return ("Error: " + response.text, 500)
+        
     cursor.execute("INSERT INTO history (user, question, answer) VALUES (%s, %s, %s)",
                    (session['user'], input_text, Answers[best_answer_index]))
     conn.commit()

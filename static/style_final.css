@@ -56,7 +56,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to right, #a0e6a0, #8de4c2); /* or your green */
+    background: linear-gradient(to right, #4CAF50, #2E7D32); 
     padding: 8px 12px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;}
