@@ -11,11 +11,20 @@
     <h2>Welcome to SMARTeIS, {{ session['user'] }}!</h2>
     <p>Click the button at the bottom right to chat.</p>
     </div>
+
+
+    <div class="greeting-message", id = 'greeting-message'>
+        <p> How can I assist you today?</p>
+    </div>
+
+    
+    
     <div class="chat-button" onclick="toggleChat()"> 🤖 </div>
 
  <div id="chat-popup" class="chat-popup">
     <div class="chat-header">
     🤖 SMARTeISBot AI
+    <br> 🟢 Active
     <span class="chat-header-buttons">
         <span onclick="minimizeChat()" id="minimize" style="cursor:pointer;">➖</span>
         <span onclick="resetChat()" id="cross" style="cursor:pointer;">✖️</span>
@@ -46,6 +55,8 @@
     }
 
     function toggleChat() {
+    const greeting = document.getElementById('greeting-message');
+    greeting.style.display = 'none';
     const popup = document.getElementById('chat-popup');
     popup.classList.toggle('active');
 
